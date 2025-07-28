@@ -50,7 +50,7 @@ void main() {
 
     // Output should be already formatted.
     var contents = generatedFile.readAsStringSync();
-    var formatter = DartFormatter();
+    var formatter = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion);
     expect(contents, formatter.format(contents));
 
     var expectedContents =

@@ -149,7 +149,7 @@ Future<void> processYamlDocument(
   }
 
   try {
-    output = DartFormatter().format(output);
+    output = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(output);
   } on FormatterException catch (e) {
     io.stderr.writeln(e);
   }
