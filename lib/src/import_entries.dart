@@ -179,7 +179,7 @@ class StringImportEntry extends ImportEntry {
       throw const FormatException('Unsupported encoding: UTF-16BE');
     }
 
-    var data = _file.readAsStringSync();
+    var data = _file.readAsStringSync().replaceAll(RegExp(r'\r\n?'), '\n');
     return 'const $name = "${escapeString(data)}";';
   }
 }
