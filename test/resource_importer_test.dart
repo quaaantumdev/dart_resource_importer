@@ -61,6 +61,9 @@ void main() {
   test('Generated output is correct', () {
     expect(resources.stringResource, multilineString);
     expect(resources.stringListResource, LineSplitter.split(multilineString));
+    expect(resources.utf8BlankResource, '');
+    expect(resources.utf8NewlineResource, '\n');
+    expect(resources.utf8Newline2xResource, '\n\n');
     expect(resources.loadBinaryResource(), binaryData);
     expect(resources.loadShorterBinaryResource(), binaryData);
     expect(resources.loadShortestBinaryResource(), binaryData);

@@ -10,6 +10,9 @@ final defaultModificationTime = DateTime.utc(2022, 1, 1);
 
 const binaryFilePathPosix = 'assets/data.bin';
 const multilineTextFilePathPosix = 'assets/utf8_multiline.txt';
+const blankTextFilePathPosix = 'assets/utf8_blank.txt';
+const newlineTextFilePathPosix = 'assets/utf8_newline.txt';
+const newline2xTextFilePathPosix = 'assets/utf8_newline2x.txt';
 const destinationPathPosix = 'lib/app.resources.dart';
 
 const allYaml = '''
@@ -24,6 +27,18 @@ resource_importer:
     stringListResource:
       path: '$multilineTextFilePathPosix'
       type: List<String>
+
+    utf8BlankResource:
+      path: '$blankTextFilePathPosix'
+      type: String
+
+    utf8NewlineResource:
+      path: '$newlineTextFilePathPosix'
+      type: String
+
+    utf8Newline2xResource:
+      path: '$newline2xTextFilePathPosix'
+      type: String
 
     binaryResource:
       path: '$binaryFilePathPosix'
@@ -76,6 +91,26 @@ MemoryFileSystem setUpMemoryFileSystem({
     ..copyFile(
       source: getTestFile(multilineTextFilePathPosix),
       destinationPosix: '$packageRootPath/$multilineTextFilePathPosix',
+      lastModified: defaultModificationTime,
+    )
+    ..copyFile(
+      source: getTestFile(multilineTextFilePathPosix),
+      destinationPosix: '$packageRootPath/$multilineTextFilePathPosix',
+      lastModified: defaultModificationTime,
+    )
+    ..copyFile(
+      source: getTestFile(blankTextFilePathPosix),
+      destinationPosix: '$packageRootPath/$blankTextFilePathPosix',
+      lastModified: defaultModificationTime,
+    )
+    ..copyFile(
+      source: getTestFile(newlineTextFilePathPosix),
+      destinationPosix: '$packageRootPath/$newlineTextFilePathPosix',
+      lastModified: defaultModificationTime,
+    )
+    ..copyFile(
+      source: getTestFile(newline2xTextFilePathPosix),
+      destinationPosix: '$packageRootPath/$newline2xTextFilePathPosix',
       lastModified: defaultModificationTime,
     )
     ..currentDirectory = packageRootPath;

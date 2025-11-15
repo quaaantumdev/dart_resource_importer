@@ -198,8 +198,79 @@ class StringImportEntry extends ImportEntry {
       throw const FormatException('Unsupported encoding: UTF-16BE');
     }
 
-    var data = _file.readAsStringSync().replaceAll(RegExp(r'\r\n?'), '\n');
-    return 'const $name = "${escapeString(data)}";';
+    final b = StringBuffer();
+
+    // using lineSplitter ensures we convert `\r\n` to `\n` and also gives us the
+    // opportunity to build the string up of multiple chunks, allowing for greater
+    // readability with things such as text templates.
+    final lines = _splitLines(_file.readAsStringSync());
+
+    // if the string ends with a newline, we can avoid emitting the last line as it would be empty
+    // and just ensure the `\n` is present end of the line before.
+    final int lastEmittedIndex;
+    final bool endsWithNewLine;
+    if (lines.length > 1 && lines.last.isEmpty) {
+      endsWithNewLine = true;
+      lastEmittedIndex = lines.length - 2;
+    } else {
+      endsWithNewLine = false;
+      lastEmittedIndex = lines.length - 1;
+    }
+
+    b.write('const $name = ');
+    if (lastEmittedIndex > 0) {
+      // more then one line, so let's add a linebreak before the first line to improve readability.
+      b.writeln();
+    }
+
+    for (var lineIndex = 0; lineIndex <= lastEmittedIndex; lineIndex++) {
+      final line = lines[lineIndex];
+      b.write(' "');
+      b.write(escapeString(line));
+      if (lineIndex < lastEmittedIndex || endsWithNewLine) {
+        b.write(r'\n');
+      }
+      b.write('"');
+      if (lineIndex < lastEmittedIndex) {
+        b.writeln();
+      } else {
+        b.writeln(';');
+      }
+    }
+
+    return b.toString();
+  }
+
+  /// Dart's LineSplitter will not emmit the last empty line, but we dont want to loose anything
+  /// from the file's contents, so we have to implement this ourselfes. We just want to convert
+  /// all linebreaks to \n and emit individual strings for each line.
+  ///
+  /// Always returns at least one line.
+  List<String> _splitLines(String fileContents) {
+    const crCharCode = 13;
+    const lfCahrCode = 10;
+
+    var lines = <String>[];
+    var end = fileContents.length;
+    var sliceStart = 0;
+    var char = 0;
+    for (var i = 0; i < end; i++) {
+      var previousChar = char;
+      char = fileContents.codeUnitAt(i);
+      if (char != crCharCode) {
+        if (char != lfCahrCode) {
+          continue;
+        }
+        if (previousChar == crCharCode) {
+          sliceStart = i + 1;
+          continue;
+        }
+      }
+      lines.add(fileContents.substring(sliceStart, i));
+      sliceStart = i + 1;
+    }
+    lines.add(fileContents.substring(sliceStart, end));
+    return lines;
   }
 }
 
