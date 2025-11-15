@@ -61,9 +61,9 @@ void main() {
   test('Generated output is correct', () {
     expect(resources.stringResource, multilineString);
     expect(resources.stringListResource, LineSplitter.split(multilineString));
-    expect(resources.binaryResource, binaryData);
-    expect(resources.shorterBinaryResource, binaryData);
-    expect(resources.shortestBinaryResource, binaryData);
+    expect(resources.loadBinaryResource(), binaryData);
+    expect(resources.loadShorterBinaryResource(), binaryData);
+    expect(resources.loadShortestBinaryResource(), binaryData);
     expect(resources.base64Resource.data(), binaryData);
     expect(resources.gzippedResource.data(), binaryData);
   });
@@ -119,7 +119,7 @@ void main() {
       );
       expect(
         newContent,
-        contains('var someStringResource = "Hello world!";\n'),
+        contains('const someStringResource = "Hello world!";\n'),
       );
     });
 

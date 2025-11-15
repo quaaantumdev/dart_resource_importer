@@ -91,9 +91,12 @@ class Uint8ListImportEntry extends ImportEntry {
 
   @override
   String generateCode() {
+    // Uint8List is no const type, so we keep the raw data in a const int list and provide a load method
+    // to retrieve the Uint8List. This is pretty efficient and avoids memory leaks as we dont keep the
+    // Uint8List arround.
     var data = _file.readAsBytesSync();
     var stringBuffer = StringBuffer()
-      ..write('final $name = Uint8List.fromList(const [')
+      ..write('const _$name = <int>[')
       ..writeln('// Do not format.');
     var count = 0;
     for (var byte in data) {
@@ -104,7 +107,13 @@ class Uint8ListImportEntry extends ImportEntry {
         stringBuffer.write('\n');
       }
     }
-    stringBuffer.writeln(']);');
+    stringBuffer
+      ..writeln('];')
+      ..write('Uint8List load')
+      ..write(name.substring(0, 1).toUpperCase())
+      ..write(name.substring(1))
+      ..writeln('() => Uint8List.fromList(_$name);');
+
     return stringBuffer.toString();
   }
 }
@@ -128,6 +137,8 @@ class Base64DataImportEntry extends ImportEntry {
 class GzippedDataImportEntry extends ImportEntry {
   GzippedDataImportEntry._() : super._();
 
+  static const _gzipHeaderFileSystemByteIndex = 9;
+
   @override
   List<String> get requiredImports =>
       const ["import 'package:$packageName/gzipped_data.dart';"];
@@ -139,12 +150,20 @@ class GzippedDataImportEntry extends ImportEntry {
       ..write('const $name = GzippedData([')
       ..writeln('// Do not format.');
     var count = 0;
-    for (var byte in io.gzip.encode(data)) {
+
+    final encodedBytes = io.gzip.encode(data);
+    if (encodedBytes.length > _gzipHeaderFileSystemByteIndex) {
+      // by setting the gzip os byte to 255 (unknown operating system) we generate consistent headers
+      // which is also important for unit testing.
+      encodedBytes[_gzipHeaderFileSystemByteIndex] = 0xFF;
+    }
+
+    for (var byte in encodedBytes) {
       var hex = byte.toRadixString(16).toUpperCase().padLeft(2, '0');
       stringBuffer.write('0x$hex, ');
       count += 1;
       if (count % 10 == 0) {
-        stringBuffer.write('\n');
+        stringBuffer.writeln();
       }
     }
     stringBuffer.writeln(']);');

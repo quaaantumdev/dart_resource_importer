@@ -13,10 +13,10 @@ import 'dart:typed_data';
 import 'package:resource_importer/base64_data.dart';
 import 'package:resource_importer/gzipped_data.dart';
 
-var stringResource =
+const stringResource =
     "The quick brown fox jumps over the lazy dog.\nPack my box with five dozen liquor jugs.\nJackdaws love my big sphinx of quartz.\nThe five boxing wizards jump quickly.\n\n\"Hello!\" he said.\n\"Where's the \$amount you owe me?\" she asked.\n";
 
-var stringListResource = [
+const stringListResource = [
   "The quick brown fox jumps over the lazy dog.",
   "Pack my box with five dozen liquor jugs.",
   "Jackdaws love my big sphinx of quartz.",
@@ -26,7 +26,7 @@ var stringListResource = [
   "\"Where's the \$amount you owe me?\" she asked.",
 ];
 
-var binaryResource = Uint8List.fromList(const [
+const _binaryResource = <int>[
   // Do not format.
   0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
   0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13,
@@ -80,9 +80,10 @@ var binaryResource = Uint8List.fromList(const [
   0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF, 0xF0, 0xF1, 0xF2, 0xF3,
   0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD,
   0xFE, 0xFF,
-]);
+];
+Uint8List loadBinaryResource() => Uint8List.fromList(_binaryResource);
 
-var shorterBinaryResource = Uint8List.fromList(const [
+const _shorterBinaryResource = <int>[
   // Do not format.
   0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
   0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13,
@@ -136,9 +137,11 @@ var shorterBinaryResource = Uint8List.fromList(const [
   0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF, 0xF0, 0xF1, 0xF2, 0xF3,
   0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD,
   0xFE, 0xFF,
-]);
+];
+Uint8List loadShorterBinaryResource() => Uint8List.fromList(_shorterBinaryResource);
 
-var shortestBinaryResource = Uint8List.fromList(const [
+
+const _shortestBinaryResource = <int>[
   // Do not format.
   0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
   0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13,
@@ -192,14 +195,15 @@ var shortestBinaryResource = Uint8List.fromList(const [
   0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF, 0xF0, 0xF1, 0xF2, 0xF3,
   0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD,
   0xFE, 0xFF,
-]);
+];
+Uint8List loadShortestBinaryResource() => Uint8List.fromList(_shortestBinaryResource);
 
-var base64Resource = const Base64Data(
+const base64Resource = Base64Data(
     "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/wABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8=");
 
-var gzippedResource = const GzippedData([
+const gzippedResource = GzippedData([
   // Do not format.
-  0x1F, 0x8B, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03,
+  0x1F, 0x8B, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF,
   0x63, 0x60, 0x64, 0x62, 0x66, 0x61, 0x65, 0x63, 0xE7, 0xE0,
   0xE4, 0xE2, 0xE6, 0xE1, 0xE5, 0xE3, 0x17, 0x10, 0x14, 0x12,
   0x16, 0x11, 0x15, 0x13, 0x97, 0x90, 0x94, 0x92, 0x96, 0x91,
