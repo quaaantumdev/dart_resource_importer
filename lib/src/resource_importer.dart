@@ -14,6 +14,11 @@ import 'import_entries.dart';
 /// The name of this package.
 const packageName = 'resource_importer';
 
+/// The version of the output format. Changes the digest and therefore ensures we re-generate the output
+/// whenever the resourceImporter implementation comes changes to the output. So bump this number whenever
+/// things change output the output generated.
+const outputVersion = 1;
+
 final _logger = log.Logger.root;
 
 /// The resource importer configuration loaded from a YAML document.
@@ -87,7 +92,7 @@ Future<void> processYamlDocument(
   YamlNode documentRoot, {
   required FileSystem fs,
 }) async {
-  var config = loadResourceImporterConfiguration(documentRoot, fs: fs);
+  var config = loadResourceImporterConfiguration(documentRoot, fs: fs, outputVersion: outputVersion);
   if (config == null) {
     return;
   }
@@ -149,7 +154,8 @@ Future<void> processYamlDocument(
   }
 
   try {
-    output = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format(output);
+    output = DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+        .format(output);
   } on FormatterException catch (e) {
     io.stderr.writeln(e);
   }
@@ -162,6 +168,7 @@ Future<void> processYamlDocument(
 ResourceImporterConfiguration? loadResourceImporterConfiguration(
   YamlNode documentRoot, {
   required FileSystem fs,
+  required int outputVersion,
 }) {
   if (documentRoot is! YamlMap) {
     return null;
@@ -287,8 +294,10 @@ ResourceImporterConfiguration? loadResourceImporterConfiguration(
   return ResourceImporterConfiguration(
     importEntries: importEntries,
     destinationPath: destinationPath,
-    checksum:
-        sha1.convert(utf8.encode(resourceImporterRoot.span.text.trimRight())),
+    checksum: sha1.convert([
+      outputVersion,
+      ...utf8.encode(resourceImporterRoot.span.text.trimRight())
+    ]),
   );
 }
 
