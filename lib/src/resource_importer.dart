@@ -323,6 +323,7 @@ String generateOutput(ResourceImporterConfiguration config) {
     'prefer_single_quotes',
     'public_member_api_docs',
     'require_trailing_commas',
+    'constant_identifier_names',
   ];
 
   for (var lint in ignoredLints) {

@@ -8,6 +8,7 @@
 // ignore_for_file: prefer_single_quotes
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: require_trailing_commas
+// ignore_for_file: constant_identifier_names
 
 import 'dart:typed_data';
 import 'package:resource_importer/base64_data.dart';
